@@ -9,7 +9,7 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         # Adding model 'Redirect'
-        db.create_table('django_redirect', (
+        db.create_table('priority_redirects_redirect', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('site', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['sites.Site'])),
             ('old_path', self.gf('django.db.models.fields.CharField')(max_length=200, db_index=True)),
@@ -18,12 +18,12 @@ class Migration(SchemaMigration):
         db.send_create_signal(u'priority_redirects', ['Redirect'])
 
         # Adding unique constraint on 'Redirect', fields ['site', 'old_path']
-        db.create_unique('django_redirect', ['site_id', 'old_path'])
+        db.create_unique('priority_redirects_redirect', ['site_id', 'old_path'])
 
 
     def backwards(self, orm):
         # Removing unique constraint on 'Redirect', fields ['site', 'old_path']
-        db.delete_unique('django_redirect', ['site_id', 'old_path'])
+        db.delete_unique('priority_redirects_redirect', ['site_id', 'old_path'])
 
         # Deleting model 'Redirect'
         db.delete_table('django_redirect')

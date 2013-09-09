@@ -9,14 +9,14 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         # Adding field 'Redirect.universal'
-        db.add_column('django_redirect', 'universal',
+        db.add_column('priority_redirects_redirect', 'universal',
                       self.gf('django.db.models.fields.BooleanField')(default=False),
                       keep_default=False)
 
 
     def backwards(self, orm):
         # Deleting field 'Redirect.universal'
-        db.delete_column('django_redirect', 'universal')
+        db.delete_column('priority_redirects_redirect', 'universal')
 
 
     models = {

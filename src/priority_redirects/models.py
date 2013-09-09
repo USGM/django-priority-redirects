@@ -10,12 +10,11 @@ class Redirect(models.Model):
         help_text=_("This should be an absolute path, excluding the domain name. Example: '/events/search/'."))
     new_path = models.CharField(_('redirect to'), max_length=200, blank=True,
         help_text=_("This can be either an absolute path (as above) or a full URL starting with 'http://'."))
-    universal = models.BooleanField(default=False)
+    universal = models.BooleanField(default=False, help_text="Make this affect all sites, not just the redirect's primary site.")
 
     class Meta:
         verbose_name = _('redirect')
         verbose_name_plural = _('redirects')
-        db_table = 'django_redirect'
         unique_together=(('site', 'old_path'),)
         ordering = ('old_path',)
 
