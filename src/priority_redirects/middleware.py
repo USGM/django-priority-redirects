@@ -16,7 +16,6 @@ class RedirectMiddleware(object):
             )
 
     def process_response(self, request, response):
-
         full_path = request.get_full_path()
         current_site = get_current_site(request)
 
@@ -24,7 +23,10 @@ class RedirectMiddleware(object):
         try:
             r = Redirect.objects.get(site=current_site, old_path=full_path)
         except Redirect.DoesNotExist:
-            pass
+            try:
+                r = Redirect.objects.get(universal=True, old_path=full_path)
+            except Redirect.DoesNotExist:
+                pass
         if settings.APPEND_SLASH and not request.path.endswith('/'):
             # Try appending a trailing slash.
             path_len = len(request.path)
