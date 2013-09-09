@@ -32,7 +32,10 @@ class RedirectMiddleware(object):
             try:
                 r = Redirect.objects.get(site=current_site, old_path=full_path)
             except Redirect.DoesNotExist:
-                pass
+                try:
+                    r = Redirect.objects.get(universal=True, old_path=full_path)
+                except Redirect.DoesNotExist:
+                    pass
         if r is not None:
             if r.new_path == '':
                 return http.HttpResponseGone()
