@@ -5,7 +5,7 @@ from django.test import TestCase
 from django.test.utils import override_settings
 from django.utils import six
 
-from middleware import RedirectFallbackMiddleware
+from middleware import RedirectMiddleware
 from models import Redirect
 
 
@@ -60,4 +60,4 @@ class RedirectTests(TestCase):
                         if app != 'django.contrib.sites'])
     def test_sites_not_installed(self):
         with self.assertRaises(ImproperlyConfigured):
-            RedirectFallbackMiddleware()
+            RedirectMiddleware()
