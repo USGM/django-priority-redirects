@@ -1,48 +1,33 @@
 # -*- coding: utf-8 -*-
-import datetime
-from south.db import db
-from south.v2 import SchemaMigration
-from django.db import models
+from __future__ import unicode_literals
+
+from django.db import migrations, models
 
 
-class Migration(SchemaMigration):
+class Migration(migrations.Migration):
 
-    def forwards(self, orm):
-        # Adding model 'Redirect'
-        db.create_table('priority_redirects_redirect', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('site', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['sites.Site'])),
-            ('old_path', self.gf('django.db.models.fields.CharField')(max_length=200, db_index=True)),
-            ('new_path', self.gf('django.db.models.fields.CharField')(max_length=200, blank=True)),
-        ))
-        db.send_create_signal(u'priority_redirects', ['Redirect'])
+    dependencies = [
+        ('sites', '0001_initial'),
+    ]
 
-        # Adding unique constraint on 'Redirect', fields ['site', 'old_path']
-        db.create_unique('priority_redirects_redirect', ['site_id', 'old_path'])
-
-
-    def backwards(self, orm):
-        # Removing unique constraint on 'Redirect', fields ['site', 'old_path']
-        db.delete_unique('priority_redirects_redirect', ['site_id', 'old_path'])
-
-        # Deleting model 'Redirect'
-        db.delete_table('django_redirect')
-
-
-    models = {
-        u'priority_redirects.redirect': {
-            'Meta': {'ordering': "('old_path',)", 'unique_together': "(('site', 'old_path'),)", 'object_name': 'Redirect', 'db_table': "'django_redirect'"},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'new_path': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
-            'old_path': ('django.db.models.fields.CharField', [], {'max_length': '200', 'db_index': 'True'}),
-            'site': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['sites.Site']"})
-        },
-        u'sites.site': {
-            'Meta': {'ordering': "('domain',)", 'object_name': 'Site', 'db_table': "'django_site'"},
-            'domain': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
-        }
-    }
-
-    complete_apps = ['priority_redirects']
+    operations = [
+        migrations.CreateModel(
+            name='Redirect',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('old_path', models.CharField(help_text="This should be an absolute path, excluding the domain name. Example: '/events/search/'.", max_length=200, verbose_name='redirect from', db_index=True)),
+                ('new_path', models.CharField(help_text="This can be either an absolute path (as above) or a full URL starting with 'http://'.", max_length=200, verbose_name='redirect to', blank=True)),
+                ('universal', models.BooleanField(default=False, help_text=b"Make this affect all sites, not just the redirect's primary site.")),
+                ('site', models.ForeignKey(to='sites.Site')),
+            ],
+            options={
+                'ordering': ('old_path',),
+                'verbose_name': 'redirect',
+                'verbose_name_plural': 'redirects',
+            },
+        ),
+        migrations.AlterUniqueTogether(
+            name='redirect',
+            unique_together=set([('site', 'old_path')]),
+        ),
+    ]
