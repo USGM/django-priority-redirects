@@ -1,10 +1,10 @@
 from __future__ import unicode_literals
 
-from django.conf import settings
-from models import Redirect
-from django.contrib.sites.models import get_current_site
-from django.core.exceptions import ImproperlyConfigured
 from django import http
+from django.conf import settings
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.exceptions import ImproperlyConfigured
+from models import Redirect
 
 
 class RedirectMiddleware(object):
@@ -17,9 +17,9 @@ class RedirectMiddleware(object):
 
     def process_response(self, request, response):
         if response.status_code == 500:
-             # Possible Database issue. Better let it through,
-             # as transaction may have been aborted.
-             return response
+            # Possible Database issue. Better let it through,
+            # as transaction may have been aborted.
+            return response
         full_path = request.get_full_path()
         current_site = get_current_site(request)
         r = None
